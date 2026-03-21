@@ -192,8 +192,9 @@ to the 3270 client."
       (dbgmsg "SCO: error reading response: ~S~%" err)
       (return-from show-screen-opts (values resp err)))
 
-    ;; Strip spaces from field values unless the caller requested
-    ;; that we maintain whitespace.
+    ;; Right-trim trailing spaces from field values (padding) unless
+    ;; the caller requested that we maintain all whitespace.
+    ;; Leading spaces are preserved as they represent user content.
 
     (dbgmsg "SCO: munging fields.~%")
     (dolist (fld (screen-fields screen))
@@ -205,9 +206,9 @@ to the 3270 client."
 
           (when found
             (setf (gethash (field-name fld) (response-vals resp))
-                  (string-trim " "
-                               (gethash (field-name fld)
-                                        (response-vals resp))))))))
+                  (string-right-trim " "
+                                     (gethash (field-name fld)
+                                              (response-vals resp))))))))
     )
   (dbgmsg "SCO: returning ~S~%" resp)
   (values resp nil))
