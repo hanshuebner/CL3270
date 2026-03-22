@@ -169,7 +169,8 @@ to the 3270 client."
                             conn
                             (not (screen-opts-no-clear opts))
                             (screen-opts-altscreen opts)
-                            (screen-opts-codepage opts)))
+                            (screen-opts-codepage opts)
+                            :set-cursor (not (screen-opts-no-response opts))))
   (when err
     (dbgmsg "SCO: error from SHOW-SCREE-INTERNAL~%")
     (return-from show-screen-opts (values resp err)))
@@ -248,7 +249,8 @@ encountered.
                                                  :cursor-col ccol))))
 
 
-(defun show-screen-internal (screen vals crow ccol conn clear dev cp)
+(defun show-screen-internal (screen vals crow ccol conn clear dev cp
+                             &key (set-cursor t))
   (declare (type screen screen)
            (type (or null dict) vals)
            (type row-index crow)
@@ -332,7 +334,7 @@ encountered.
             )
           ))) ; dolist
 
-    (progn
+    (when set-cursor
       (when (or (minusp crow) (>= crow rows)) (setq crow 0))
       (when (or (minusp ccol) (>= ccol cols)) (setq ccol 0))
       (write-buffer* b (ic crow ccol cols)))
