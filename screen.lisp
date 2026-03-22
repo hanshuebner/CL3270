@@ -332,7 +332,7 @@ encountered.
             )
           ))) ; dolist
 
-    (when clear
+    (progn
       (when (or (minusp crow) (>= crow rows)) (setq crow 0))
       (when (or (minusp ccol) (>= ccol cols)) (setq ccol 0))
       (write-buffer* b (ic crow ccol cols)))
