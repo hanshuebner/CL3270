@@ -52,6 +52,17 @@
   )
 
 
+(defun field-modified-p (response field-name)
+  "Return T if FIELD-NAME was modified by the user (present in the response).
+The 3270 Read Modified command only transmits fields whose MDT (Modified Data
+Tag) was set by the terminal hardware when the user typed in them."
+  (nth-value 1 (gethash field-name (response-vals response))))
+
+(defun modified-field-names (response)
+  "Return a list of field names that were modified by the user."
+  (loop for key being the hash-keys of (response-vals response)
+        collect key))
+
 (defmethod print-object ((r response) stream)
   (print-unreadable-object (r stream :identity t)
     (format stream "Response 3720: ~A ~D ~D ~S"

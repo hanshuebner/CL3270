@@ -155,6 +155,9 @@ code.")
    "RESPONSE-ROW"
    "RESPONSE-COL"
    "RESPONSE-VALS"
+
+   "FIELD-MODIFIED-P"
+   "MODIFIED-FIELD-NAMES"
    )
 
   ;; Application building.
