@@ -316,8 +316,14 @@ encountered.
 
             ;; (dbgmsg "SCI: content ~S~%" content)
 
-            (when (string/= content "")
-              (write-buffer* b (encode-characters cp content))
+            (let ((write-content (if (and (not clear)
+                                          (string= content "")
+                                          (plusp (length (field-content fld))))
+                                     (make-string (length (field-content fld))
+                                                  :initial-element #\Space)
+                                     content)))
+              (when (string/= write-content "")
+                (write-buffer* b (encode-characters cp write-content)))
               )
 
             (when (field-write fld)
