@@ -23,9 +23,11 @@ Returns the socket with its stream replaced by an SSL stream."
   (declare (type usocket:stream-usocket socket)
            (type tls-config tls-config))
   (let* ((raw-stream (usocket:socket-stream socket))
+         (cert-file (tls-config-certificate-file tls-config))
          (ssl-stream (cl+ssl:make-ssl-server-stream
                       raw-stream
-                      :certificate (tls-config-certificate-file tls-config)
+                      :certificate cert-file
+                      :certificate-chain cert-file
                       :key (tls-config-key-file tls-config))))
     (setf (usocket:socket-stream socket) ssl-stream)
     socket))
