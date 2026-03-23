@@ -19,16 +19,21 @@
 
 (defun wrap-socket-with-tls (socket tls-config)
   "Upgrade SOCKET's stream to TLS using CL+SSL.
-Returns the socket with its stream replaced by an SSL stream."
+Returns the socket with its stream replaced by an SSL stream.
+Uses an SSL context with certificate-chain-file so the full chain
+(including intermediates) is sent to clients."
   (declare (type usocket:stream-usocket socket)
            (type tls-config tls-config))
   (let* ((raw-stream (usocket:socket-stream socket))
-         (cert-file (tls-config-certificate-file tls-config))
-         (ssl-stream (cl+ssl:make-ssl-server-stream
-                      raw-stream
-                      :certificate cert-file
-                      :certificate-chain cert-file
-                      :key (tls-config-key-file tls-config))))
+         (ctx (cl+ssl:make-context
+               :certificate-chain-file (tls-config-certificate-file tls-config)
+               :private-key-file (tls-config-key-file tls-config)
+               :verify-mode cl+ssl:+ssl-verify-none+))
+         (ssl-stream (cl+ssl:with-global-context (ctx :auto-free-p t)
+                       (cl+ssl:make-ssl-server-stream
+                        raw-stream
+                        :certificate (tls-config-certificate-file tls-config)
+                        :key (tls-config-key-file tls-config)))))
     (setf (usocket:socket-stream socket) ssl-stream)
     socket))
 
