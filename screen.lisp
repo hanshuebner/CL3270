@@ -170,7 +170,8 @@ to the 3270 client."
                             (not (screen-opts-no-clear opts))
                             (screen-opts-altscreen opts)
                             (screen-opts-codepage opts)
-                            :set-cursor (not (screen-opts-no-response opts))))
+                            :set-cursor (not (screen-opts-no-response opts))
+                            :no-reset (screen-opts-no-response opts)))
   (when err
     (dbgmsg "SCO: error from SHOW-SCREE-INTERNAL~%")
     (return-from show-screen-opts (values resp err)))
@@ -250,7 +251,7 @@ encountered.
 
 
 (defun show-screen-internal (screen vals crow ccol conn clear dev cp
-                             &key (set-cursor t))
+                             &key (set-cursor t) no-reset)
   (declare (type screen screen)
            (type (or null dict) vals)
            (type row-index crow)
@@ -286,14 +287,13 @@ encountered.
         (write-buffer b #xF1)) ; Write to terminal.
 
 
-    (if clear
-        (write-buffer b #xC3)  ; WCC = Reset, Unlock Keyboard, Reset MDT.
-
-        ;; Don't clear modified data tag if we're not clearing the
-        ;; screen; we still want the client to send any data a user
-        ;; has modified in fields.
-
-        (write-buffer b #xC2)) ; WCC = Reset, Unlock Keyboard (*no* reset MDT).
+    (cond
+      (clear
+       (write-buffer b #xC3))   ; WCC = Reset, Unlock Keyboard, Reset MDT.
+      (no-reset
+       (write-buffer b #x42))   ; WCC = Unlock Keyboard only (no Reset, no MDT reset).
+      (t
+       (write-buffer b #xC2)))  ; WCC = Reset, Unlock Keyboard (*no* reset MDT).
 
     ;; Now build the commands for each field on the screen.
 
