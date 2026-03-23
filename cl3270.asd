@@ -37,6 +37,10 @@ which can be found at
                 :depends-on ("ebcdic" "codes" "device" "bytes" "util" "debug")
                 )
 
+               (:file "tls"
+                :depends-on ("telnet" "codes" "bytes")
+                )
+
                (:file "response" :depends-on ("ebcdic" "codes" "telnet"))
                (:file "screen"   :depends-on ("telnet" "response"))
                (:file "defscreen" :depends-on ("screen"))
@@ -51,7 +55,7 @@ which can be found at
                              )
                 :depends-on ("codepage"))
                )
-  :depends-on ("usocket" "usocket-server" "split-sequence" "cl-ppcre")
+  :depends-on ("usocket" "usocket-server" "split-sequence" "cl-ppcre" "cl+ssl")
   )
 
 ;;;; end of file -- cl3270.asd

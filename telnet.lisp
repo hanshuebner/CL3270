@@ -210,11 +210,12 @@ connection, C."
 ;;; The new version uses a better factored CHECK-OPTION-RESPONSE.  See
 ;;; the note before that function.
 
-(defun negotiate-telnet (c &aux (ss (usocket:socket-stream c)))
+(defun negotiate-telnet (c &key tls-config &aux (ss (usocket:socket-stream c)))
   "Negotiate TN3270 or telnet connection options.
 
 NEGOTIATE-TELNET will check client responses and negotiate the options
-necessary for TN3270 or similar on a new telnet connection, C."
+necessary for TN3270 or similar on a new telnet connection, C.
+When TLS-CONFIG is provided, STARTTLS is offered before protocol negotiation."
 
   ;; Sometimes the client will trigger us to send our "will" assertions
   ;; sooner than we otherwise would. Keep track here so we know not to send
@@ -222,7 +223,10 @@ necessary for TN3270 or similar on a new telnet connection, C."
 
   (declare (type usocket:stream-usocket c))
 
-  (let ((sent-will-bin nil)
+  (let ((starttls-established
+          (when (and tls-config (tls-config-starttls-p tls-config))
+            (negotiate-starttls c tls-config)))
+        (sent-will-bin nil)
         (sent-will-eor nil)
         (devtype nil)
         )
@@ -333,8 +337,8 @@ necessary for TN3270 or similar on a new telnet connection, C."
       (setf (values sent-will-eor sent-will-bin)
             (check-option-response c +binary-option+ +will+ sent-will-eor sent-will-bin)))
 
-    (model-device-info c devtype)
-  
+    (values (model-device-info c devtype) nil starttls-established)
+
     #| Old
     ;; (declare (type usocket:stream-server-usocket c))
     (send-sequence (vector +iac+ +do+ +terminal-type+) ss)

@@ -59,6 +59,11 @@
 
 (def-telnet-code +eor-option+ 25 "EOR option.")
 
+(def-telnet-code +start-tls+ 46 "STARTTLS option.")
+
+(defconstant +start-tls-follows+ 1
+  "STARTTLS FOLLOWS subnegotiation value.")
+
 (def-telnet-code +eor+ 239 "EOR.")
 
 
