@@ -50,6 +50,7 @@
   (row 0 :type row-index)
   (col 0 :type col-index)
   (content ""   :type string)
+  (len 0 :type fixnum)
   (write nil    :type boolean)
   (autoskip nil :type boolean)
   (intense nil  :type boolean)
@@ -318,13 +319,16 @@ encountered.
 
             ;; (dbgmsg "SCI: content ~S~%" content)
 
-            (let ((write-content (if (and (not clear)
-                                          (string= content "")
-                                          (plusp (length (field-content fld))))
-                                     (make-string (length (field-content fld))
-                                                  :initial-element #\Space)
-                                     content)))
-              (when (string/= write-content "")
+            (let* ((pad-len (if (plusp (field-len fld))
+                                 (field-len fld)
+                                 (length (field-content fld))))
+                   (write-content (if (and (not clear)
+                                           (< (length content) pad-len))
+                                      (concatenate 'string content
+                                                   (make-string (- pad-len (length content))
+                                                                :initial-element #\Space))
+                                      content)))
+              (when (plusp (length write-content))
                 (write-buffer* b (encode-characters cp write-content)))
               )
 
