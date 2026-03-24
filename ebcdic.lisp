@@ -44,10 +44,10 @@
 ;;; *default-codepage*
 
 (defparameter *default-codepage*
-  (if (boundp '*codepage-1147*)
-      *codepage-1147*
-      *codepage-bracket*)
-  "The current default codepage.")
+  *codepage-bracket*
+  "The current default codepage.
+The bracket codepage is the default for x3270/c3270 and is a safe fallback
+when the client does not negotiate a specific codepage.")
 
 
 ;;; set-codepage
