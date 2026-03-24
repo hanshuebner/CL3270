@@ -143,7 +143,6 @@ A synonym for HASH-TABLE."
     (multiple-value-bind (aid err)
         (read-aid c)
       (when err
-        (format *error-output* "CL3270: error: READ-AID error ~S~%" err)
         (return-from read-response (values r err)))
 
       (dbgmsg "READ-RESPONSE: #x~2,'0X ~S~%" aid (aid-to-string aid))
