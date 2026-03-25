@@ -177,6 +177,7 @@ Other, IO related, errors may be raised."
         for br from 0
         while (usocket:wait-for-input c :timeout timeout :ready-only t)
         do (setf b (read-byte ss nil nil))
+           (unless b (return (values br seq)))
            (vector-push b seq)
         finally (return (values br seq))))
 
