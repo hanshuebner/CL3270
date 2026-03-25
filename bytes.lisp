@@ -65,8 +65,10 @@ be a vector with a FILL-POINTER.
 
 The (modified) BUFFER is returned."
 
-  (declare (type buffer buffer)
-           (type unsigned-byte b))
+  (declare (type buffer buffer))
+  (unless (typep b '(unsigned-byte 8))
+    (error "write-buffer: expected (unsigned-byte 8), got ~S (~A)"
+           b (type-of b)))
   (vector-push b buffer)
   buffer)
 
