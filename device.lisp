@@ -23,6 +23,7 @@ Minimal information about the device, i.e., the 3270 terminal."
   (cols 0 :type (mod 1024))
   (term-type "IBM 3270" :type string)
   (codepage nil :type (or null codepage)) ; FTTB.
+  (tls-p nil :type boolean)
   )
 
 

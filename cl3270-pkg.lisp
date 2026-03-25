@@ -144,6 +144,7 @@ code.")
    "DEVICE-INFO"
    "DEVICE-INFO-P"
    "MAKE-DEVICE-INFO"
+   "TLS-P"
    )
 
   ;; TLS

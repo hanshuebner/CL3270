@@ -338,7 +338,10 @@ When TLS-CONFIG is provided, STARTTLS is offered before protocol negotiation."
       (setf (values sent-will-eor sent-will-bin)
             (check-option-response c +binary-option+ +will+ sent-will-eor sent-will-bin)))
 
-    (values (model-device-info c devtype) nil starttls-established)
+    (let ((devinfo (model-device-info c devtype)))
+      (when starttls-established
+        (setf (tls-p devinfo) t))
+      (values devinfo nil))
 
     #| Old
     ;; (declare (type usocket:stream-server-usocket c))
