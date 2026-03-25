@@ -57,6 +57,10 @@ Often these vectors have a fill pointer and are adjustable."
 
 (declaim (ftype (function (buffer octet) buffer) write-buffer)
          (inline write-buffer))
+(define-condition buffer-write-error (simple-error)
+  ()
+  (:documentation "Signaled when write-buffer receives a non-byte value."))
+
 (defun write-buffer (buffer b)
   "Write a (unsigned) byte, an octet, B at the end of BUFFER.
 
@@ -67,8 +71,9 @@ The (modified) BUFFER is returned."
 
   (declare (type buffer buffer))
   (unless (typep b '(unsigned-byte 8))
-    (error "write-buffer: expected (unsigned-byte 8), got ~S (~A)"
-           b (type-of b)))
+    (error 'buffer-write-error
+           :format-control "write-buffer: expected (unsigned-byte 8), got ~S (~A)"
+           :format-arguments (list b (type-of b))))
   (vector-push b buffer)
   buffer)
 
