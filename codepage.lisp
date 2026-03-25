@@ -109,6 +109,25 @@ See Also:
 *CODEPAGES* hash table."))
 
 
+(define-condition unencodable-character (error)
+  ((character :reader unencodable-character-char
+              :initarg :character
+              :type character)
+   (codepage :reader unencodable-character-codepage
+             :initarg :codepage
+             :type codepage))
+  (:report (lambda (c stream)
+             (format stream "Character ~S (U+~4,'0X) cannot be encoded in ~A."
+                     (unencodable-character-char c)
+                     (char-code (unencodable-character-char c))
+                     (codepage-name (unencodable-character-codepage c)))))
+  (:documentation
+   "Signaled when a character has no mapping in the target codepage.
+
+Established restarts:
+  USE-SUBSTITUTE - Replace the character with the codepage's substitute byte."))
+
+
 (defun make-codepage (&rest keys &key &allow-other-keys)
   "Create a CODEPAGE and inserts it isn the internal data structures.
 
@@ -232,40 +251,54 @@ The decoding handles graphic escape to codepage CP310 as needed."
 (defun encode-characters (cp s)
   "Encode CHARACTER string S into an EBCDIC byte array.
 
-The encoding will handle graphic escape to CP310 as needed."
+The encoding will handle graphic escape to CP310 as needed.
+Signals UNENCODABLE-CHARACTER for characters that have no mapping,
+with a USE-SUBSTITUTE restart that replaces them with the codepage's
+substitute byte."
 
   (declare (type codepage cp)
            (type string s))
-  
+
   (let ((u2e    (codepage-u2e cp))
-        (high2e (codepage-u2ge cp))
+        (high2e (codepage-high-u2e cp))
         (u2ge   (codepage-u2ge cp))
         (ge     (codepage-ge cp))
-        (esub   (codepage-esub cp))
-        )
+        (esub   (codepage-esub cp)))
     (declare (type (vector octet) u2e)
              (type hash-table high2e u2ge)
-             (type octet ge esub)) 
+             (type octet ge esub))
 
     (loop with out = (make-buffer :capacity (length s))
-          with ec of-type octet = esub
-          with ec-p of-type boolean = nil
-          with u2e-len of-type fixnum = (length u2e) ; of-type (eql 256) ?
+          with u2e-len of-type fixnum = (length u2e)
 
           for c of-type character across s
           for cc = (char-code c)
 
-          initially (progn ec-p ge) ; Will it work?
-          do (cond ((< cc u2e-len) (write-buffer out (aref u2e cc)))
+          do (cond
+               ;; Direct mapping for code points < 256
+               ((< cc u2e-len)
+                (write-buffer out (aref u2e cc)))
 
-                   ((nth-value 1 (setf (values ec ec-p) (gethash cc high2e)))
-                    (write-buffer out ec))
+               ;; High Unicode to EBCDIC (no graphic escape needed)
+               ((multiple-value-bind (byte found) (gethash c high2e)
+                  (when found
+                    (write-buffer out byte)
+                    t)))
 
-                   ((nth-value 1 (setf (values ec ec-p) (gethash cc u2ge)))
+               ;; Graphic escape mapping via CP310
+               ((multiple-value-bind (byte found) (gethash c u2ge)
+                  (when found
                     (write-buffer out ge)
-                    (write-buffer out ec))
-                   
-                   (t (write-buffer out esub)))
+                    (write-buffer out byte)
+                    t)))
+
+               ;; No mapping - signal with restart
+               (t
+                (restart-case
+                    (error 'unencodable-character :character c :codepage cp)
+                  (use-substitute ()
+                    :report "Replace with the codepage substitute character."
+                    (write-buffer out esub)))))
 
           finally (return-from encode-characters out))))
 

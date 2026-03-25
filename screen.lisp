@@ -329,7 +329,11 @@ encountered.
                                                                 :initial-element #\Space))
                                       content)))
               (when (plusp (length write-content))
-                (write-buffer* b (encode-characters cp write-content)))
+                (handler-bind ((unencodable-character
+                                (lambda (c)
+                                  (declare (ignore c))
+                                  (invoke-restart 'use-substitute))))
+                  (write-buffer* b (encode-characters cp write-content))))
               )
 
             (when (field-write fld)
