@@ -322,8 +322,7 @@ encountered.
             (let* ((pad-len (if (plusp (field-len fld))
                                  (field-len fld)
                                  (length (field-content fld))))
-                   (write-content (if (and (not clear)
-                                           (< (length content) pad-len))
+                   (write-content (if (< (length content) pad-len)
                                       (concatenate 'string content
                                                    (make-string (- pad-len (length content))
                                                                 :initial-element #\Space))
