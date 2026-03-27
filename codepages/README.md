@@ -21,9 +21,8 @@ The subset of `.ucm` files is manually curated.
   directory; the file `codepages/icu-data-ibm-ucm-files.txt` contains
   a list of them.
 * Then a subset of them was selected for **CL** code generation (cf.,
-  the file `setup.lisp` and the `ensure-codepages` function in
   `generate.lisp` in the present directory).  The set of pages that
-  are generated is held -- for the time being -- in the variable
+  are generated is held in the variable
   `*ibm-x3270-icu-code-page-codes*`, defaulting to
   ```Lisp
   (list 37 273 275 277 278 280 284 285 297 424 500 803 870 871 875 880
@@ -31,13 +30,42 @@ The subset of `.ucm` files is manually curated.
         1149 1160)
   ```
   according to Matthew Wilson's Discord post.
-* Finally the `ensure-codepages` functions populates the
-  `codepages/cps` with the `lisp` files containing the
-  `cl3270:codepage` structures.
-  
+* The generated `.lisp` files in `codepages/cps` are committed to
+  version control and compiled/loaded by ASDF like regular source
+  files.
+
 As per Matthew Wilson's code, the **bracket** and the *graphics
 escapes* **310** codepages are treated specially (vagaries of the
 [x3270](https://x3270.bgp.nu/) emulator).
+
+
+### Adding or Removing Codepages
+
+The codepage `.lisp` files in `cps/` are generated from ICU `.ucm`
+data but checked into git as regular source files.  ASDF compiles and
+loads them; the generation code in `generate.lisp` is not part of the
+normal build.
+
+To **regenerate** all codepages (e.g. after updating ICU data):
+
+```Lisp
+(load "codepages/generate.lisp")
+(cl3270::generate-code-pages)
+```
+
+To **add** a codepage:
+
+1. Add the codepage ID to `*ibm-x3270-icu-code-page-codes*` in
+   `generate.lisp` and run `generate-code-pages` as above.
+2. Add a `(:file "cp-NNN")` entry to the `cps` module in `cl3270.asd`.
+3. Commit both the new `.lisp` file and the updated `.asd`.
+
+To **remove** a codepage:
+
+1. Remove the `(:file "cp-NNN")` entry from `cl3270.asd`.
+2. Delete the `.lisp` file from `codepages/cps/`.
+3. Remove the ID from `*ibm-x3270-icu-code-page-codes*` in
+   `generate.lisp`.
 
 
 ### A NOTE ON FORKING
