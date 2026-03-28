@@ -18,7 +18,8 @@
    (cols      :initarg :cols      :accessor cols      :initform 0         :type (mod 1024))
    (term-type :initarg :term-type :accessor term-type :initform "IBM 3270" :type string)
    (codepage  :initarg :codepage  :accessor codepage  :initform nil       :type (or null codepage))
-   (tls-p     :initarg :tls-p     :accessor tls-p     :initform nil       :type boolean))
+   (tls-p     :initarg :tls-p     :accessor tls-p     :initform nil       :type boolean)
+   (device-name :initarg :device-name :accessor device-name :initform nil :type (or null string)))
   (:documentation "The Device Info Class.
 
 Minimal information about the device, i.e., the 3270 terminal."))

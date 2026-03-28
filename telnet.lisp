@@ -644,6 +644,12 @@ SENT-BIN : a BOOLEAN
   (declare (type usocket:usocket c)
            (type string term-type))
 
+  ;; Split RFC 1646 LU name: IBM-3279-2-E@luname
+  (let* ((at-pos (position #\@ term-type))
+         (lu-name (when at-pos (subseq term-type (1+ at-pos)))))
+    (when at-pos
+      (setq term-type (subseq term-type 0 at-pos)))
+
   (flet ((check-term-type (term-type)
            ;; No regexp!
            (and (string-equal "IBM-" term-type :end2 4)
@@ -724,7 +730,8 @@ SENT-BIN : a BOOLEAN
             ;; return whatever we're already assuming.
 
             (return-from model-device-info
-              (make-instance 'device-info :rows 24 :cols 80 :term-type term-type))))
+              (make-instance 'device-info :rows 24 :cols 80 :term-type term-type
+                             :device-name lu-name))))
 
       (when (or (/= n 1) (/= +aid-query-response+ (aref aid 0)))
         (error 'telnet-error))
@@ -786,8 +793,9 @@ SENT-BIN : a BOOLEAN
       (make-instance 'device-info :rows rows
                                    :cols cols
                                    :term-type term-type
-                                   :codepage codepage)
-      )))
+                                   :codepage codepage
+                                   :device-name lu-name)
+      ))))
 
 
 ;;; get-usable-area

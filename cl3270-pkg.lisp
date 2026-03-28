@@ -147,6 +147,7 @@ code.")
    "COLS"
    "TERM-TYPE"
    "TLS-P"
+   "DEVICE-NAME"
    )
 
   ;; TLS
