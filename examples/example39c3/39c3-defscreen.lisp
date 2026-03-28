@@ -154,7 +154,7 @@ Thank you for using this application! Goodbye.
                           (show-screen-opts congress-screen1
                                             field-values
                                             c
-                                            (make-screen-opts
+                                            (make-instance 'screen-opts
                                              :codepage (codepage devinfo)
                                              :cursor-row 17
                                              :cursor-col 21))
@@ -178,7 +178,7 @@ Thank you for using this application! Goodbye.
                           (show-screen-opts goodbye-screen
                                             nil
                                             c
-                                            (make-screen-opts
+                                            (make-instance 'screen-opts
                                              :codepage (codepage devinfo)
                                              :no-response t))
 
@@ -219,7 +219,7 @@ Thank you for using this application! Goodbye.
                      (show-screen-opts screen2
                                        field-values
                                        c
-                                       (make-screen-opts
+                                       (make-instance 'screen-opts
                                         :codepage (codepage devinfo)))
                    (when err
                      (format *error-output*
@@ -233,7 +233,7 @@ Thank you for using this application! Goodbye.
                      (show-screen-opts goodbye-screen
                                        nil
                                        c
-                                       (make-screen-opts
+                                       (make-instance 'screen-opts
                                         :codepage (codepage devinfo)
                                         :no-response t))
                      (dbgmsg "C3270 HANDLE: returning from mainloop in 2 secs.~%")

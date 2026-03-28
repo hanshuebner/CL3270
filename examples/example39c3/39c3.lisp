@@ -5,77 +5,77 @@
 (defparameter congress-screen1
   (make-screen
    "Congress Screen1"
-   (make-field :row 0 :col 20 :intense t
+   (make-instance 'field :row 0 :col 20 :intense t
                :content "39C3 CL3270 guestbook application")
-   (make-field :row  2 :col 18 :content " 3333333   999999    CCCCCC  33333333")
-   (make-field :row  3 :col 18 :content "      3   9      9  CCCCCCCC 33333333")
-   (make-field :row  4 :col 18 :content "     3    9      9  CCC  CCC     333")
-   (make-field :row  5 :col 18 :content "    3     9      9  CCC  CCC    333     ")
-   (make-field :row  6 :col 18 :content "   3      9      9  CCC  CCC   333      ")
-   (make-field :row  7 :col 18 :content "  3       9     99  CCC  CCC  333       ")
-   (make-field :row  8 :col 18 :content " 333333    99999 9  CCC  CCC 3333333    ")
-   (make-field :row  9 :col 18 :content "       3         9  CCC      33333333   ")
-   (make-field :row 10 :col 18 :content "3      3  9      9  CCC  CCC      333")
-   (make-field :row 11 :col 18 :content "3      3  9      9  CCC  CCC 333  333")
-   (make-field :row 12 :col 18 :content "3      3  9      9  CCC  CCC 333  333")
-   (make-field :row 13 :col 18 :content "3      3  9      9  CCCCCCCC 33333333")
-   (make-field :row 14 :col 18 :content " 333333    999999    CCCCCC   333333")
-   (make-field :row 17 :col 0
+   (make-instance 'field :row  2 :col 18 :content " 3333333   999999    CCCCCC  33333333")
+   (make-instance 'field :row  3 :col 18 :content "      3   9      9  CCCCCCCC 33333333")
+   (make-instance 'field :row  4 :col 18 :content "     3    9      9  CCC  CCC     333")
+   (make-instance 'field :row  5 :col 18 :content "    3     9      9  CCC  CCC    333     ")
+   (make-instance 'field :row  6 :col 18 :content "   3      9      9  CCC  CCC   333      ")
+   (make-instance 'field :row  7 :col 18 :content "  3       9     99  CCC  CCC  333       ")
+   (make-instance 'field :row  8 :col 18 :content " 333333    99999 9  CCC  CCC 3333333    ")
+   (make-instance 'field :row  9 :col 18 :content "       3         9  CCC      33333333   ")
+   (make-instance 'field :row 10 :col 18 :content "3      3  9      9  CCC  CCC      333")
+   (make-instance 'field :row 11 :col 18 :content "3      3  9      9  CCC  CCC 333  333")
+   (make-instance 'field :row 12 :col 18 :content "3      3  9      9  CCC  CCC 333  333")
+   (make-instance 'field :row 13 :col 18 :content "3      3  9      9  CCCCCCCC 33333333")
+   (make-instance 'field :row 14 :col 18 :content " 333333    999999    CCCCCC   333333")
+   (make-instance 'field :row 17 :col 0
                :content "Your name or handle:")
-   (make-field :row 17 :col 21 :name "name" :write t :highlighting +underscore+)
-   (make-field :row 17 :col 40) ; Field "stop" character
-   (make-field :row 18 :col 0
+   (make-instance 'field :row 17 :col 21 :name "name" :write t :highlighting +underscore+)
+   (make-instance 'field :row 17 :col 40) ; Field "stop" character
+   (make-instance 'field :row 18 :col 0
                :content "Your message.......:")
-   (make-field :row 18 :col 21 :name "message" :write t :highlighting +underscore+)
-   (make-field :row 18 :col 79) ; Field "stop" character
-   (make-field :row 20 :col 0
+   (make-instance 'field :row 18 :col 21 :name "message" :write t :highlighting +underscore+)
+   (make-instance 'field :row 18 :col 79) ; Field "stop" character
+   (make-instance 'field :row 20 :col 0
                :content "Press")
-   (make-field :row 20 :col 6 :intense t :content "enter")
-   (make-field :row 20 :col 12
+   (make-instance 'field :row 20 :col 6 :intense t :content "enter")
+   (make-instance 'field :row 20 :col 12
                :content "to submit your guest book entry.")
-   (make-field :row 21 :col 0 :intense t
+   (make-instance 'field :row 21 :col 0 :intense t
                :color +red+ :name "errormsg") ; A blank field for error messages.
-   (make-field :row 22 :Col 0
+   (make-instance 'field :row 22 :Col 0
                :content "PF3 Exit")))
 
 
 (defparameter screen2
   (make-screen
    "Screen2"
-   (make-field :row 0 :col 27 :intense t
+   (make-instance 'field :row 0 :col 27 :intense t
                :content "3270 Example Application")
-   (make-field :row 2 :col 0
+   (make-instance 'field :row 2 :col 0
                :content "Thank you for submitting your name. Here's what I know:")
-   (make-field :row 4 :col 0 :content "Your first name is")
-   (make-field :row 4 :col 19 :name "fname") ; We're giving this field
+   (make-instance 'field :row 4 :col 0 :content "Your first name is")
+   (make-instance 'field :row 4 :col 19 :name "fname") ; We're giving this field
                                              ; a name to replace its
                                              ; value at runtime.
-   (make-field :row 5 :col 0 :content "And your last name is")
-   (make-field :row 5 :col 22 :name "lname") ; We're giving this field
+   (make-instance 'field :row 5 :col 0 :content "And your last name is")
+   (make-instance 'field :row 5 :col 22 :name "lname") ; We're giving this field
                                              ; a name to replace its
                                              ; value at runtime.
-   (make-field :row 6 :col 0 :name "passwordOutput")
-   (make-field :row 8 :col 0 :content "Press")
-   (make-field :row 8 :col 6 :intense t :Content "enter")
-   (make-field :row 8 :col 12 :content "to enter your name again or")
-   (make-field :row 8 :col 41 :intense t :Content "PF3")
-   (make-field :row 8 :col 45 :content "to quit and disconnect.")
-   (make-field :row 11 :Col 0 :color +turquoise+ :highlighting +reverse-video+
+   (make-instance 'field :row 6 :col 0 :name "passwordOutput")
+   (make-instance 'field :row 8 :col 0 :content "Press")
+   (make-instance 'field :row 8 :col 6 :intense t :Content "enter")
+   (make-instance 'field :row 8 :col 12 :content "to enter your name again or")
+   (make-instance 'field :row 8 :col 41 :intense t :Content "PF3")
+   (make-instance 'field :row 8 :col 45 :content "to quit and disconnect.")
+   (make-instance 'field :row 11 :Col 0 :color +turquoise+ :highlighting +reverse-video+
                :content "Here is a field with extended attributes.")
-   (make-field :row 11 :col 42) ; Remember to "stop" fields with a
+   (make-instance 'field :row 11 :col 42) ; Remember to "stop" fields with a
                                 ; regular field to clear the reverse
                                 ; video for example.
-   (make-field :row 14 :col 0 :name "position")
-   (make-field :row 22 :col 0 :content "PF3 Exit")
+   (make-instance 'field :row 14 :col 0 :name "position")
+   (make-instance 'field :row 22 :col 0 :content "PF3 Exit")
    ))
 
 
 (defparameter goodbye-screen
   (make-screen
    "Goodbye screen"
-   (make-field :row 0 :col 27 :intense t
+   (make-instance 'field :row 0 :col 27 :intense t
                :content "3270 Example Application")
-   (make-field :row 2 :col 0
+   (make-instance 'field :row 2 :col 0
                :content "Thank you for using this application. Goodbye.")))
 
 (defun cl3270-congress (&key (handler 'cl3270-handle-congress) (host "127.0.0.1") (debug nil))
@@ -140,7 +140,7 @@
                           (show-screen-opts congress-screen1
                                             field-values
                                             c
-                                            (make-screen-opts
+                                            (make-instance 'screen-opts
                                              :codepage (codepage devinfo)
                                              :cursor-row 17
                                              :cursor-col 22))
@@ -164,7 +164,7 @@
                           (show-screen-opts goodbye-screen
                                             nil
                                             c
-                                            (make-screen-opts
+                                            (make-instance 'screen-opts
                                              :codepage (codepage devinfo)
                                              :no-response t))
 
@@ -205,7 +205,7 @@
                      (show-screen-opts screen2
                                        field-values
                                        c
-                                       (make-screen-opts
+                                       (make-instance 'screen-opts
                                         :codepage (codepage devinfo)))
                    (when err
                      (format *error-output*
@@ -219,7 +219,7 @@
                      (show-screen-opts goodbye-screen
                                        nil
                                        c
-                                       (make-screen-opts
+                                       (make-instance 'screen-opts
                                         :codepage (codepage devinfo)
                                         :no-response t))
                      (dbgmsg "C3270 HANDLE: returning from mainloop in 2 secs.~%")

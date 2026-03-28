@@ -21,23 +21,21 @@
 (declaim (ftype cl3270:tx login main-menu))
 
 
-(defstruct global
-  (usercount 0 :type (mod 1024)) ; Just to limit.
-  (countlock (mp:make-lock :name "E4 Global Lock") :type mp:lock)
-  )
+(defclass global ()
+  ((usercount :initarg :usercount :accessor global-usercount :initform 0)
+   (countlock :initarg :countlock :accessor global-countlock :initform (mp:make-lock :name "E4 Global Lock"))))
           
 
-(defstruct (session (:include cl3270:abstract-session))
-  db
-  user
-  global
-  )
+(defclass session (cl3270:abstract-session)
+  ((db     :initarg :db     :accessor session-db     :initform nil)
+   (user   :initarg :user   :accessor session-user   :initform nil)
+   (global :initarg :global :accessor session-global :initform nil)))
 
 
 (defun cl3270-example4 (&key (handler 'cl3270-handle-4) (host "127.0.0.1") (debug t))
   (prog1 ; Why did I use PROG1 in the first place?
       (let ((dbconn (db-connect)) ; Fake DB.
-            (gblstate (make-global)) ; Need to set up the lock.
+            (gblstate (make-instance 'global)) ; Need to set up the lock.
             )
         (usocket:with-socket-listener (conn host 3270
                                             :element-type 'octet
@@ -59,7 +57,7 @@
 
   (unwind-protect
 
-      (let ((state (make-session :db db :global global)))
+      (let ((state (make-instance 'session :db db :global global)))
         (declare (ignorable state))
 
         (mp:with-lock ((global-countlock global))

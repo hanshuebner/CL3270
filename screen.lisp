@@ -46,22 +46,24 @@
 
 ;;; field
 
-(defstruct field
-  (row 0 :type row-index)
-  (col 0 :type col-index)
-  (content ""   :type string)
-  (len 0 :type fixnum)
-  (write nil    :type boolean)
-  (autoskip nil :type boolean)
-  (intense nil  :type boolean)
-  (hidden nil   :type boolean)
-  (numeric-only nil :type boolean)
-  (color +default-color+ :type color)
-  (highlighting +default-highlight+ :type highlight)
-  (name "" :type string)
-  (keepspaces nil :type boolean)
-  (position-only nil)
-  )
+(defclass field ()
+  ((row           :initarg :row           :accessor field-row           :initform 0                    :type row-index)
+   (col           :initarg :col           :accessor field-col           :initform 0                    :type col-index)
+   (content       :initarg :content       :accessor field-content       :initform ""                   :type string)
+   (len           :initarg :len           :accessor field-len           :initform 0                    :type fixnum)
+   (write         :initarg :write         :accessor field-write         :initform nil                  :type boolean)
+   (autoskip      :initarg :autoskip      :accessor field-autoskip      :initform nil                  :type boolean)
+   (intense       :initarg :intense       :accessor field-intense       :initform nil                  :type boolean)
+   (hidden        :initarg :hidden        :accessor field-hidden        :initform nil                  :type boolean)
+   (numeric-only  :initarg :numeric-only  :accessor field-numeric-only  :initform nil                  :type boolean)
+   (color         :initarg :color         :accessor field-color         :initform +default-color+      :type color)
+   (highlighting  :initarg :highlighting  :accessor field-highlighting  :initform +default-highlight+  :type highlight)
+   (name          :initarg :name          :accessor field-name          :initform ""                   :type string)
+   (keepspaces    :initarg :keepspaces    :accessor field-keepspaces    :initform nil                  :type boolean)
+   (position-only :initarg :position-only :accessor field-position-only :initform nil)))
+
+(defun field-p (object)
+  (typep object 'field))
 
 
 (defmethod print-object ((f field) stream)
@@ -74,35 +76,35 @@
 
 ;;; screen
 
-(defstruct (screen (:constructor make-screen (name &rest fields)))
-  (name "" :type string)
-  (fields () :type list))
+(defclass screen ()
+  ((name   :initarg :name   :accessor screen-name   :initform "" :type string)
+   (fields :initarg :fields :accessor screen-fields  :initform () :type list)))
+
+(defun make-screen (name &rest fields)
+  (make-instance 'screen :name name :fields fields))
+
+(defun screen-p (object)
+  (typep object 'screen))
 
 
 ;;; screen-opts
 
-(defstruct screen-opts
-  "The Screen-opts Struct.
+(defclass screen-opts ()
+  ((altscreen          :initarg :altscreen          :accessor screen-opts-altscreen          :initform nil                  :type (or null device-info))
+   (codepage           :initarg :codepage           :accessor screen-opts-codepage           :initform *default-codepage*  :type (or null codepage))
+   (no-response        :initarg :no-response        :accessor screen-opts-no-response        :initform nil                 :type boolean)
+   (no-clear           :initarg :no-clear           :accessor screen-opts-no-clear           :initform nil                 :type boolean)
+   (cursor-row         :initarg :cursor-row         :accessor screen-opts-cursor-row         :initform 0                   :type row-index)
+   (cursor-col         :initarg :cursor-col         :accessor screen-opts-cursor-col         :initform 0                   :type col-index)
+   (post-send-callback :initarg :post-send-callback :accessor screen-opts-post-send-callback :initform nil                 :type (or null function))
+   (callback-data      :initarg :callback-data      :accessor screen-opts-callback-data      :initform nil))
+  (:documentation "The Screen-opts Class.
 
 SCREEN-OPTS are the options that callers may set when sending a screen
-to the 3270 client."
-  
-  (altscreen nil :type (or null device-info))
+to the 3270 client."))
 
-  (codepage *default-codepage* :type (or null codepage))
-
-  (no-response nil :type boolean)
-
-  (no-clear nil :type boolean)
-
-  (cursor-row 0 :type row-index)
-
-  (cursor-col 0 :type col-index)
-
-  (post-send-callback nil :type (or null function))
-
-  (callback-data nil)
-  )
+(defun screen-opts-p (object)
+  (typep object 'screen-opts))
 
 
 ;;; fieldmap
@@ -152,7 +154,7 @@ to the 3270 client."
                                 &aux
                                 fm
                                 err
-                                (resp (make-response)))
+                                (resp (make-instance 'response)))
   (declare (type screen screen)
            (type (or null dict) vals)
            (type usocket:stream-usocket conn)
@@ -238,16 +240,16 @@ encountered.
   (show-screen-opts screen
                     vals
                     conn
-                    (make-screen-opts :cursor-row curs-row
-                                      :cursor-col curs-col)))
+                    (make-instance 'screen-opts :cursor-row curs-row
+                                                :cursor-col curs-col)))
 
 
 (defun show-screen-no-response (screen vals crow ccol conn)
   (nth-value 1
              (show-screen-opts screen vals conn
-                               (make-screen-opts :no-response t
-                                                 :cursor-row crow
-                                                 :cursor-col ccol))))
+                               (make-instance 'screen-opts :no-response t
+                                                          :cursor-row crow
+                                                          :cursor-col ccol))))
 
 
 (defun show-screen-internal (screen vals crow ccol conn clear dev cp

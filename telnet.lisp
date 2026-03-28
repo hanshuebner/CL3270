@@ -724,7 +724,7 @@ SENT-BIN : a BOOLEAN
             ;; return whatever we're already assuming.
 
             (return-from model-device-info
-              (make-device-info :rows 24 :cols 80 :term-type term-type))))
+              (make-instance 'device-info :rows 24 :cols 80 :term-type term-type))))
 
       (when (or (/= n 1) (/= +aid-query-response+ (aref aid 0)))
         (error 'telnet-error))
@@ -783,10 +783,10 @@ SENT-BIN : a BOOLEAN
             (t ; else
              (setq codepage nil)))
 
-      (make-device-info :rows rows
-                        :cols cols
-                        :term-type term-type
-                        :codepage codepage)
+      (make-instance 'device-info :rows rows
+                                   :cols cols
+                                   :term-type term-type
+                                   :codepage codepage)
       )))
 
 

@@ -23,19 +23,19 @@
 (in-package "CL3270.E4")
 
 
-(defstruct user
-  (username "")
-  (password "")
-  (name "")
-  (signup-date 0))
+(defclass user ()
+  ((username    :initarg :username    :accessor user-username    :initform "")
+   (password    :initarg :password    :accessor user-password    :initform "")
+   (name        :initarg :name        :accessor user-name        :initform "")
+   (signup-date :initarg :signup-date :accessor user-signup-date :initform 0)))
 
 
-(defstruct dbstate
-  (lock (mp:make-lock :name "DB Lock"))
-  (users (make-dict :test #'equalp)))
+(defclass dbstate ()
+  ((lock  :initarg :lock  :accessor dbstate-lock  :initform (mp:make-lock :name "DB Lock"))
+   (users :initarg :users :accessor dbstate-users :initform (make-dict :test #'equalp))))
 
 
-(defun db-connect () (make-dbstate))
+(defun db-connect () (make-instance 'dbstate))
 
 
 (define-condition user-exists-error () ()
@@ -51,7 +51,7 @@
     (let ((user (gethash username (dbstate-users dbs))))
       (unless user
         (return-from get-user
-          (values (make-user) (make-condition 'not-found-error))))
+          (values (make-instance 'user) (make-condition 'not-found-error))))
 
       (values user nil))))
 
@@ -61,7 +61,7 @@
     (let ((user (gethash (user-name user) (dbstate-users dbs))))
       (when user
         (return-from create-user
-          (values (make-user) (make-condition 'user-exists-error)))))
+          (values (make-instance 'user) (make-condition 'user-exists-error)))))
 
     (setf (user-signup-date user) (get-universal-time))
 
@@ -80,7 +80,7 @@
     (let ((olduser (gethash (user-username user) (dbstate-users dbs))))
       (unless olduser
         (return-from update-user
-          (values (make-user) (make-condition 'not-found-error))))
+          (values (make-instance 'user) (make-condition 'not-found-error))))
 
       ;; Make sure original signup date is maintained.
 

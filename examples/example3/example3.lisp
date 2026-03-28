@@ -25,17 +25,17 @@
 (defparameter example3-screen1
   (make-screen
    "Example 3 Screen 1"
-   (make-field :row 0 :col 35 :intense t :content "3270 Clock")
-   (make-field :row 1 :col 0 :color +white+
+   (make-instance 'field :row 0 :col 35 :intense t :content "3270 Clock")
+   (make-instance 'field :row 1 :col 0 :color +white+
                :content "------------------------------------------------------------------------")
 
-   (make-field :row 5 :col 5 :color +turquoise+
+   (make-instance 'field :row 5 :col 5 :color +turquoise+
                :content "The current UTC time is:")
-   (make-field :name "ticker"
+   (make-instance 'field :name "ticker"
                :row 5 :col 30 :color +yellow+ :intense t
                :content "XX:XX:XX")
 
-   (make-field :row 22 :col 0 :content "PF3 Exit")
+   (make-instance 'field :row 22 :col 0 :content "PF3 Exit")
    ))
 
 
@@ -105,7 +105,7 @@
                               (show-screen-opts example3-screen1
                                                 nil
                                                 c
-                                                (make-screen-opts
+                                                (make-instance 'screen-opts
                                                  :cursor-row 23
                                                  :cursor-col 0
                                                  :codepage (codepage devinfo)))
@@ -161,7 +161,7 @@
                                 (show-screen-opts *refresh-screen-field*
                                                   nil
                                                   c
-                                                  (make-screen-opts
+                                                  (make-instance 'screen-opts
                                                    :no-clear t
                                                    :no-response t
                                                    :codepage (codepage devinfo))

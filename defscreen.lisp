@@ -111,10 +111,10 @@ implicit PROGN."
                   (attribute-change-position row-map (1+ col) attributes)
                   (static-text-end-position row-map col)))
          (content (map 'string #'car (subseq row-map col end))))
-    (values `(make-field :row ,(if (> col 0) row (1- row))
-                         :col ,(1- (if (> col 0) col +screen-columns+))
-                         ,@(unless (every (lambda (c) (eql c #\Space)) content) `(:content ,content))
-                         ,@attributes)
+    (values `(make-instance 'field :row ,(if (> col 0) row (1- row))
+                                  :col ,(1- (if (> col 0) col +screen-columns+))
+                                  ,@(unless (every (lambda (c) (eql c #\Space)) content) `(:content ,content))
+                                  ,@attributes)
             row
             end)))
 
@@ -127,8 +127,8 @@ implicit PROGN."
           (setf (values field row col) (find-field cell-map row col))
           (push field fields)
           (when (and (< col +screen-columns+)
-                     (remove-from-plist (rest field) :row :col :content))
-            (push `(make-field :row ,row :col ,col) fields)))))))
+                     (remove-from-plist (cddr field) :row :col :content))
+            (push `(make-instance 'field :row ,row :col ,col) fields)))))))
 
 (defun set-attributes-in-cell-map (cell-map field-definitions)
   (dolist (field-definition field-definitions

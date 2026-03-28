@@ -50,45 +50,46 @@
                     :junk-allowed nil))))
 
 
-(defstruct (field-rules
-            (:constructor field-rules (field
-                                       &key
-                                       must-change
-                                       error-text
-                                       validator
-                                       reset)))
-  "The FIELD-RULES structure.
+(defclass field-rules ()
+  ((field       :initarg :field       :accessor field-rules-field       :initform ""            :type string)
 
-FIELD-RULES objects provide validation rules for a particular field."
+   ;; must-change, when true, indicates that the value of the field MUST be
+   ;; altered by the user -- if applied to a field with no starting value,
+   ;; this makes the field a required field. If true on a field with a
+   ;; starting value (either in the field's Content attribute, or with an
+   ;; override in the initial values map), then the user must change
+   ;; the value from the default.
+   (must-change :initarg :must-change :accessor field-rules-must-change :initform nil           :type boolean)
 
-  (field "" :type string)
+   ;; error-text is the text displayed with the MustChange validation fails.
+   ;; If ErrorText is the empty string, but MustValidation fails, an error
+   ;; string will be constructed from the field name:
+   ;; "Please enter a valid value for <fieldName>."
+   (error-text  :initarg :error-text  :accessor field-rules-error-text  :initform ""            :type string)
 
-  ;; must-change, when true, indicates that the value of the field MUST be
-  ;; altered by the user -- if applied to a field with no starting value,
-  ;; this makes the field a required field. If true on a field with a
-  ;; starting value (either in the field's Content attribute, or with an
-  ;; override in the initial values map), then the user must change
-  ;; the value from the default.
-  (must-change nil :type boolean)
+   ;; validator is a function to validate the value the user input into
+   ;; the field. It may be nil if no validation is required. The
+   ;; Validator function is called *after* the MustChange logic, so if
+   ;; you wish to fully handle validation, ensure MustChange is set to
+   ;; false.
+   (validator   :initarg :validator   :accessor field-rules-validator   :initform (constantly t) :type (or symbol function validator))
 
-  ;; error-text is the text displayed with the MustChange validation fails.
-  ;; If ErrorText is the empty string, but MustValidation fails, an error
-  ;; string will be constructed from the field name:
-  ;; "Please enter a valid value for <fieldName>."
-  (error-text "" :type string)
+   ;; reset indicates that if the screen fails validation, this field
+   ;; should always be reset to its original/default value, regardless
+   ;; of what the user entered.
+   (reset       :initarg :reset       :accessor field-rules-reset       :initform nil           :type boolean))
 
-  ;; validator is a function to validate the value the user input into
-  ;; the field. It may be nil if no validation is required. The
-  ;; Validator function is called *after* the MustChange logic, so if
-  ;; you wish to fully handle validation, ensure MustChange is set to
-  ;; false.
-  (validator (constantly t) :type (or symbol function validator)) ; Not quite right.
+  (:documentation "The FIELD-RULES class.
 
-  ;; reset indicates that if the screen fails validation, this field
-  ;; should always be reset to its original/default value, regardless
-  ;; of what the user entered.
-  (reset nil :type boolean)
-  )
+FIELD-RULES objects provide validation rules for a particular field."))
+
+(defun field-rules (field &key must-change (error-text "") (validator (constantly t)) reset)
+  (make-instance 'field-rules :field field :must-change must-change
+                               :error-text error-text :validator validator
+                               :reset reset))
+
+(defun field-rules-p (object)
+  (typep object 'field-rules))
 
 
 ;;; make-rules
@@ -240,10 +241,11 @@ CONN -- the network connection to the 3270 client.
 
        (multiple-value-bind (resp err)
            (show-screen-opts screen my-vals conn
-                             (make-screen-opts :cursor-row curs-row
-                                               :cursor-col curs-col
-                                               :altscreen devinfo
-                                               :codepage cp))
+                             (make-instance 'screen-opts
+                                          :cursor-row curs-row
+                                          :cursor-col curs-col
+                                          :altscreen devinfo
+                                          :codepage cp))
 
          (when err
            (format *error-output* "CL3270: HANDLE-SCREEN-ALT error: ~S~%" err)

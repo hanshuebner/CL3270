@@ -143,7 +143,9 @@ code.")
   (:export
    "DEVICE-INFO"
    "DEVICE-INFO-P"
-   "MAKE-DEVICE-INFO"
+   "ROWS"
+   "COLS"
+   "TERM-TYPE"
    "TLS-P"
    )
 
@@ -164,7 +166,6 @@ code.")
    "UNNEGOTIATE-TELNET"
 
    "RESPONSE"
-   "MAKE-RESPONSE"
    "RESPONSE-P"
 
    "RESPONSE-AID"
@@ -194,12 +195,15 @@ code.")
    "+REVERSE-VIDEO+"
    "+UNDERSCORE+"
 
+   "FIELD"
+   "SCREEN"
+   "SCREEN-OPTS"
+
    "MAKE-SCREEN"
    "SCREEN-P"
    "SCREEN-FIELDS"
    "SCREEN-NAME"
 
-   "MAKE-SCREEN-OPTS"
    "SCREEN-OPTS-ALTSCREEN"
    "SCREEN-OPTS-CALLBACK-DATA"
    "SCREEN-OPTS-CODEPAGE"
@@ -210,7 +214,6 @@ code.")
    "SCREEN-OPTS-P"
    "SCREEN-OPTS-POST-SEND-CALLBACK"
 
-   "MAKE-FIELD"
    "FIELD-AUTOSKIP"
    "FIELD-COL"
    "FIELD-COLOR"
@@ -250,7 +253,6 @@ code.")
   ;; Transactions
   (:export
    "ABSTRACT-SESSION"
-   "ABSTRACT-SESSION-P"
 
    "TX"
 

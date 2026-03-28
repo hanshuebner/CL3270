@@ -31,34 +31,34 @@
 (defparameter *login-screen*
   (make-screen
    "E4 Login Screen"
-   (make-field :row 0 :col 37 :intense t :content "Logon")
+   (make-instance 'field :row 0 :col 37 :intense t :content "Logon")
 
-   (make-field :row 2 :col 0
+   (make-instance 'field :row 2 :col 0
                :content "Welcome to the go3270 example application. Please log on.")
 
    ;; Username
-   (make-field :row 4 :col 0 :content "Username . . ." :color +green+)
-   (make-field :row 4 :col 15 :name +login-user-name+
+   (make-instance 'field :row 4 :col 0 :content "Username . . ." :color +green+)
+   (make-instance 'field :row 4 :col 15 :name +login-user-name+
                :write t :highlighting +underscore+ :color +turquoise+)
-   (make-field :row 4 :col 24 :Autoskip t) ; field "stop" character
+   (make-instance 'field :row 4 :col 24 :Autoskip t) ; field "stop" character
 
    ;; Password
-   (make-field :row 5 :col 0 :content "Password . . ." :color +green+)
-   (make-field :row 5 :col 15 :name +login-password+ :write t :hidden t)
-   (make-field :row 5 :col 79) ; field "stop" character
+   (make-instance 'field :row 5 :col 0 :content "Password . . ." :color +green+)
+   (make-instance 'field :row 5 :col 15 :name +login-password+ :write t :hidden t)
+   (make-instance 'field :row 5 :col 79) ; field "stop" character
 
    ;; Registration instructions
-   (make-field :row 7 :col 0 :content "If you don't yet have an account press")
-   (make-field :row 7 :col 40 :content "PF5" :color +white+ :intense t)
-   (make-field :row 7 :col 44 :content "to register a new account.")
+   (make-instance 'field :row 7 :col 0 :content "If you don't yet have an account press")
+   (make-instance 'field :row 7 :col 40 :content "PF5" :color +white+ :intense t)
+   (make-instance 'field :row 7 :col 44 :content "to register a new account.")
 
    ;; Error message
-   (make-field :row 21 :col 0 :name +login-error+ :color +red+ :intense t)
+   (make-instance 'field :row 21 :col 0 :name +login-error+ :color +red+ :intense t)
 
    ;; Key legend
-   (make-field :row 23 :col 1  :content "F1=Help")
-   (make-field :row 23 :col 14 :content "F3=Exit")
-   (make-field :row 23 :col 27 :content "F5=Register")
+   (make-instance 'field :row 23 :col 1  :content "F1=Help")
+   (make-instance 'field :row 23 :col 14 :content "F3=Exit")
+   (make-instance 'field :row 23 :col 27 :content "F5=Register")
    )
   "The Example 4 Login Screen")
 
@@ -155,40 +155,40 @@
 (defparameter *new-user-screen*
   (make-screen
    "E4 New User Screen"
-   (make-field :row 0 :col 30 :intense t
+   (make-instance 'field :row 0 :col 30 :intense t
                :content "New User Registration")
 
-   (make-field :row 2 :col 0
+   (make-instance 'field :row 2 :col 0
                :content "Please provide your user registration details.")
 
    ;; Username
-   (make-field :row 4 :col 0 :content "Username . . ." :color +green+)
-   (make-field :row 4 :col 15 :name +login-user-name+ :Write t
+   (make-instance 'field :row 4 :col 0 :content "Username . . ." :color +green+)
+   (make-instance 'field :row 4 :col 15 :name +login-user-name+ :Write t
                :highlighting +underscore+ :color +turquoise+)
-   (make-field :row 4 :col 24 :autoskip t) ; field "stop" character
+   (make-instance 'field :row 4 :col 24 :autoskip t) ; field "stop" character
 
    ;; Password
-   (make-field :row 5 :col 0 :content "Password . . ." :color +green+)
-   (make-field :row 5 :col 15 :name +login-password+ :write t :hidden t)
-   (make-field :row 5 :col 79 :autoskip t) ; field "stop" character
+   (make-instance 'field :row 5 :col 0 :content "Password . . ." :color +green+)
+   (make-instance 'field :row 5 :col 15 :name +login-password+ :write t :hidden t)
+   (make-instance 'field :row 5 :col 79 :autoskip t) ; field "stop" character
 
    ;; Password
-   (make-field :row 6 :col 0 :content "Confirm Pass ." :color +green+)
-   (make-field :row 6 :col 15 :name +login-password-conf+ :write t :hidden t)
-   (make-field :row 6 :col 79 :autoskip t) ; field "stop" character
+   (make-instance 'field :row 6 :col 0 :content "Confirm Pass ." :color +green+)
+   (make-instance 'field :row 6 :col 15 :name +login-password-conf+ :write t :hidden t)
+   (make-instance 'field :row 6 :col 79 :autoskip t) ; field "stop" character
 
    ;; Name
-   (make-field :row 7 :col 0 :content "Name . . . . ." :color +green+)
-   (make-field :row 7 :col 15 :name +login-name+ :Write t
+   (make-instance 'field :row 7 :col 0 :content "Name . . . . ." :color +green+)
+   (make-instance 'field :row 7 :col 15 :name +login-name+ :Write t
                :highlighting +underscore+ :color +turquoise+)
-   (make-field :row 7 :col 46 :autoskip t) ; field "stop" character
+   (make-instance 'field :row 7 :col 46 :autoskip t) ; field "stop" character
 
    ;; Error message
-   (make-field :row 21 :col 0 :name +login-error+ :color +red+ :intense t)
+   (make-instance 'field :row 21 :col 0 :name +login-error+ :color +red+ :intense t)
 
    ;; Key legend
-   (make-field :row 23 :col 1 :content "F1=Help")
-   (make-field :row 23 :col 14 :content "F3=Exit")
+   (make-instance 'field :row 23 :col 1 :content "F1=Help")
+   (make-instance 'field :row 23 :col 14 :content "F3=Exit")
    ))
 
 
@@ -199,10 +199,13 @@
    (field-rules +login-password-conf+ :validator #'non-blank-validator)))
 
 
-(defstruct new-user-data
-  (username "")
-  (name "")
-  (errmsg ""))
+(defclass new-user-data ()
+  ((username :initarg :username :accessor new-user-data-username :initform "")
+   (name     :initarg :name     :accessor new-user-data-name     :initform "")
+   (errmsg   :initarg :errmsg   :accessor new-user-data-errmsg   :initform "")))
+
+(defun new-user-data-p (object)
+  (typep object 'new-user-data))
 
 
 ;;; new-user
@@ -278,7 +281,7 @@
       (return-from new-user
         (values s
                 #'new-user
-                (make-new-user-data
+                (make-instance 'new-user-data
                  :username username
                  :name name
                  :errmsg "Passwords do not match.")
@@ -287,7 +290,7 @@
       
     (multiple-value-setq (user err)
         (create-user (session-db s)
-                     (make-user :username username
+                     (make-instance 'user :username username
                                 :password password
                                 :name name)))
 
@@ -300,7 +303,7 @@
       (return-from new-user
         (values s
                 #'new-user
-                (make-new-user-data
+                (make-instance 'new-user-data
                  :username username
                  :name name
                  :errmsg "Username already exists; please choose a new one.")
@@ -310,7 +313,7 @@
       (return-from new-user
         (values s
                 #'new-user
-                (make-new-user-data
+                (make-instance 'new-user-data
                  :username username
                  :name name
                  :errmsg "Unknown error creating new user")

@@ -13,18 +13,18 @@
 
 (in-package "CL3270")
 
-(defstruct (device-info (:conc-name nil))
+(defclass device-info ()
+  ((rows      :initarg :rows      :accessor rows      :initform 0         :type (mod 1024))
+   (cols      :initarg :cols      :accessor cols      :initform 0         :type (mod 1024))
+   (term-type :initarg :term-type :accessor term-type :initform "IBM 3270" :type string)
+   (codepage  :initarg :codepage  :accessor codepage  :initform nil       :type (or null codepage))
+   (tls-p     :initarg :tls-p     :accessor tls-p     :initform nil       :type boolean))
+  (:documentation "The Device Info Class.
 
-  "The Device Info Struct.
+Minimal information about the device, i.e., the 3270 terminal."))
 
-Minimal information about the device, i.e., the 3270 terminal."
-
-  (rows 0 :type (mod 1024)) ; Let's exaggerate!
-  (cols 0 :type (mod 1024))
-  (term-type "IBM 3270" :type string)
-  (codepage nil :type (or null codepage)) ; FTTB.
-  (tls-p nil :type boolean)
-  )
+(defun device-info-p (object)
+  (typep object 'device-info))
 
 
 (defun alt-dimensions (d)

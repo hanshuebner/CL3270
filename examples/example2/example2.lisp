@@ -8,36 +8,36 @@
 (defparameter example2-screen1
   (make-screen
    "Example 2 Screen 1"
-   (make-field :row 0 :col 27 :intense t
+   (make-instance 'field :row 0 :col 27 :intense t
                :content "3270 example 2 application")
-   (make-field :row 2 :col 0
+   (make-instance 'field :row 2 :col 0
                :content "Welcome to the cl3270 example 2 application. please enter your name.")
 
-   (make-field :row 4 :col 0 :content "First Name  . . .")
-   (make-field :row 4 :col 19 :name "fname" :write t :highlighting +underscore+)
-   (make-field :row 4 :col 40 :autoskip t) ; Field "stop" character
+   (make-instance 'field :row 4 :col 0 :content "First Name  . . .")
+   (make-instance 'field :row 4 :col 19 :name "fname" :write t :highlighting +underscore+)
+   (make-instance 'field :row 4 :col 40 :autoskip t) ; Field "stop" character
 
-   (make-field :row 5 :col 0 :content "Last Name . . . .")
-   (make-field :row 5 :col 19 :name "lname" :write t :highlighting +underscore+)
-   (make-field :row 5 :col 40 :autoskip t) ; Field "stop" character
+   (make-instance 'field :row 5 :col 0 :content "Last Name . . . .")
+   (make-instance 'field :row 5 :col 19 :name "lname" :write t :highlighting +underscore+)
+   (make-instance 'field :row 5 :col 40 :autoskip t) ; Field "stop" character
 
-   (make-field :row 6 :col 0 :content "Password  . . . .")
-   (make-field :row 6 :col 19 :name "password" :write t :hidden t)
-   (make-field :row 6 :col 40) ; Field "stop" character
+   (make-instance 'field :row 6 :col 0 :content "Password  . . . .")
+   (make-instance 'field :row 6 :col 19 :name "password" :write t :hidden t)
+   (make-instance 'field :row 6 :col 40) ; Field "stop" character
 
-   (make-field :row 7 :col 0 :content "Change me   . . .")
-   (make-field :row 7 :col 19 :name "changeme" :content "change me"
+   (make-instance 'field :row 7 :col 0 :content "Change me   . . .")
+   (make-instance 'field :row 7 :col 19 :name "changeme" :content "change me"
                :write t :highlighting +underscore+)
-   (make-field :row 7 :col 40) ; Field "stop" character
+   (make-instance 'field :row 7 :col 40) ; Field "stop" character
 
-   (make-field :row 8 :col 0 :content "Press")
-   (make-field :row 8 :col 6 :intense t :content "enter")
-   (make-field :row 8 :col 12 :content "to submit your name.")
+   (make-instance 'field :row 8 :col 0 :content "Press")
+   (make-instance 'field :row 8 :col 6 :intense t :content "enter")
+   (make-instance 'field :row 8 :col 12 :content "to submit your name.")
 
-   (make-field :row 10 :col 0 :intense t
+   (make-instance 'field :row 10 :col 0 :intense t
                :color +red+ :name "errormsg") ; A blank field for error messages.
 
-   (make-field :row 22 :Col 0 :content "PF3 Exit")
+   (make-instance 'field :row 22 :Col 0 :content "PF3 Exit")
    ))
 
 
@@ -55,37 +55,37 @@
 (defparameter example2-screen2
   (make-screen
    "Example 2 Screen 2"
-   (make-field :row 0 :col 27 :intense t
+   (make-instance 'field :row 0 :col 27 :intense t
                :content "3270 Example Application")
-   (make-field :row 2 :col 0
+   (make-instance 'field :row 2 :col 0
                :content "Thank you for submitting your name. Here's what I know:")
 
-   (make-field :row 4 :col 0 :content "Your first name is")
-   (make-field :row 4 :col 19 :Name "fname") ; We're giving this field
+   (make-instance 'field :row 4 :col 0 :content "Your first name is")
+   (make-instance 'field :row 4 :col 19 :Name "fname") ; We're giving this field
                                              ; a name to replace its
                                              ; value at runtime.
 
-   (make-field :row 5 :col 0 :content "And your last name is")
-   (make-field :row 5 :col 22 :name "lname") ; We're giving this field
+   (make-instance 'field :row 5 :col 0 :content "And your last name is")
+   (make-instance 'field :row 5 :col 22 :name "lname") ; We're giving this field
                                              ; a name to replace its
                                              ; value at runtime.
 
-   (make-field :row 6 :col 0 :name "passwordOutput")
+   (make-instance 'field :row 6 :col 0 :name "passwordOutput")
 
-   (make-field :row 8 :col 0 :content "Press")
-   (make-field :row 8 :col 6 :intense t :content "enter")
-   (make-field :row 8 :col 12 :content "to enter your name again or")
-   (make-field :row 8 :col 41 :intense t :content "PF3")
-   (make-field :row 8 :col 45 :content "to quit and disconnect.")
+   (make-instance 'field :row 8 :col 0 :content "Press")
+   (make-instance 'field :row 8 :col 6 :intense t :content "enter")
+   (make-instance 'field :row 8 :col 12 :content "to enter your name again or")
+   (make-instance 'field :row 8 :col 41 :intense t :content "PF3")
+   (make-instance 'field :row 8 :col 45 :content "to quit and disconnect.")
 
-   (make-field :row 11 :Col 0 :color +turquoise+ :highlighting +reverse-video+
+   (make-instance 'field :row 11 :Col 0 :color +turquoise+ :highlighting +reverse-video+
                :content "Here is a field with extended attributes.")
-   (make-field :row 11 :col 42) ; Remember to "stop" fields with a
+   (make-instance 'field :row 11 :col 42) ; Remember to "stop" fields with a
                                 ; regular field to clear the reverse
                                 ; video for example.
 
-   (make-field :row 20 :col 0 :intense t :color +red+ :name "errormsg")
-   (make-field :row 22 :col 0 :content "PF3 Exit")
+   (make-instance 'field :row 20 :col 0 :intense t :color +red+ :name "errormsg")
+   (make-instance 'field :row 22 :col 0 :content "PF3 Exit")
    ))
 
 

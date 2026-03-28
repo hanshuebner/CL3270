@@ -15,7 +15,11 @@
 
 (in-package "CL3270")
 
-(defstruct abstract-session) ; Essentially a place-holder.
+(defclass abstract-session () ()
+  (:documentation "Essentially a place-holder."))
+
+(defun abstract-session-p (object)
+  (typep object 'abstract-session))
 
 (deftype tx ()
   '(function (abstract-session usocket:usocket device-info t)
@@ -23,7 +27,7 @@
 
 
 (defun run-transactions (conn dev initial data
-                              &optional (s (make-abstract-session)))
+                              &optional (s (make-instance 'abstract-session)))
 
   (declare (type usocket:usocket conn)
            (type (or null device-info) dev)
@@ -38,9 +42,9 @@
              (type (or null error) err))
 
     (unless dev
-      (setq dev (make-device-info :rows 24
-                                  :cols 80
-                                  :term-type "DEFAULT")))
+      (setq dev (make-instance 'device-info :rows 24
+                                           :cols 80
+                                           :term-type "DEFAULT")))
 
     (loop (dbgmsg "RT: next ~S~%" next)
 

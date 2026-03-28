@@ -24,26 +24,26 @@
 (defparameter *help-screen*
   (make-screen
    "E4 Help Screen"
-   (make-field :row 0 :col 45 :Intense t :content "Online Help")
+   (make-instance 'field :row 0 :col 45 :Intense t :content "Online Help")
 
-   (make-field :row 2 :col 0
+   (make-instance 'field :row 2 :col 0
                :content "This help screen is an example of a transaction that")
 
-   (make-field :row 3 :col 0
+   (make-instance 'field :row 3 :col 0
                :content "can be used as the next transaction from many other transactions")
 
-   (make-field :row 4 :col 0 :content "and returns to the transaction that called it.")
+   (make-instance 'field :row 4 :col 0 :content "and returns to the transaction that called it.")
 
-   (make-field :row 6 :col 0 :content "Press")
-   (make-field :row 6 :col 6 :content "PF3" :color +white+ :intense t)
-   (make-field :row 6 :col 10
+   (make-instance 'field :row 6 :col 0 :content "Press")
+   (make-instance 'field :row 6 :col 6 :content "PF3" :color +white+ :intense t)
+   (make-instance 'field :row 6 :col 10
                :content "to return to the transaction from which you came.")
 
    ;; Error message
-   (make-field :row 21 :col 0 :name "errormsg" :color +red+ :intense t)
+   (make-instance 'field :row 21 :col 0 :name "errormsg" :color +red+ :intense t)
 
    ;; Key legend
-   (make-field :row 23 :col 1 :content "F3=Exit")
+   (make-instance 'field :row 23 :col 1 :content "F3=Exit")
    ))
 
 

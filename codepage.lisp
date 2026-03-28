@@ -29,50 +29,47 @@ Of course, vendors messed up, as the Wikipedia page explains."
   '(mod #x10000))
 
 
-(defstruct (codepage (:constructor %make-cp))
-  "The Codepage Structure."
+(defclass codepage ()
+  (;; (id 0 :type codepage-id :read-only t) ; LW complains.
+   (id       :initarg :id       :reader codepage-id       :initform 0                      :type codepage-id)
+   (name     :initarg :name     :reader codepage-name     :initform ""                     :type string)
 
-  ;; (id 0 :type codepage-id :read-only t) ; LW complains.
-  (id 0 :type codepage-id :read-only t)
-  (name "" :type string :read-only t)
+   ;; EBCDIC byte to Unicode code point for bytes #x00 to #xff.
+   ;; Let's just do codes.
 
-  ;; EBCDIC byte to Unicode code point for bytes #x00 to #xff.
-  ;; The type CHARACTER appears to work in most Common Lisp.
+   (e2u      :initarg :e2u      :reader codepage-e2u      :initform nil                    :type (or null (vector rune 256)))
 
-  ;;  (e2u nil :type (or null (vector character 256)) :read-only t)
+   ;; Unicode code point to EBCDIC byte for code points #x00 to #xff.
 
-  ;; Let's just do codes.
+   (u2e      :initarg :u2e      :reader codepage-u2e      :initform nil                    :type (or null (vector octet 256)))
 
-  (e2u nil :type (or null (vector rune 256)) :read-only t)
+   ;; Map of Unicode code points to EBCDIC bytes for code points above #xff.
 
-  ;; Unicode code point to EBCDIC byte for code points #x00 to #xff.
+   (high-u2e :initarg :high-u2e :reader codepage-high-u2e :initform (make-dict :test #'eql) :type dict)
 
-  (u2e nil :type (or null (vector octet 256)) :read-only t)
+   ;; The EBCDIC substitute character to use if there is no EBCDIC character
+   ;; for the requested Unicode code point (typically #x3f).
 
-  ;; Map of Unicode code points to EBCDIC bytes for code points above #xff.
+   (esub     :initarg :esub     :reader codepage-esub     :initform #x3f                   :type octet)
 
-  (high-u2e (make-dict :test #'eql) :type dict :read-only t)
+   ;; The "graphic escape" EBCDIC byte (is it ever anything other than 0x0E?).
 
-  ;; The EBCDIC substitute character to use if there is no EBCDIC character
-  ;; for the requested Unicode code point (typically #x3f).
+   (ge       :initarg :ge       :reader codepage-ge       :initform #x0e                   :type octet)
 
-  (esub #x3f :type octet :read-only t)
+   ;; Graphic escape codepage EBCDIC byte to Unicode code point for bytes
+   ;; #x00 to #xff.  Use character `#\Replacement-Character` (`#\Ufffd`)
+   ;; for unmapped bytes.
 
-  ;; The "graphic escape" EBCDIC byte (is it ever anything other than 0x0E?).
+   (ge2u     :initarg :ge2u     :reader codepage-ge2u     :initform nil                    :type (or null (vector character 256)))
 
-  (ge #x0e :type octet :read-only t)
+   ;; Map of Unicode code points to graphic escape EBCDIC bytes.
 
-  ;; Graphic escape codepage EBCDIC byte to Unicode code point for bytes
-  ;; #x00 to #xff.  Use character `#\Replacement-Character` (`#\Ufffd`)
-  ;; for unmapped bytes.
-  
-  (ge2u nil :type (or null (vector character 256)) :read-only t)
+   (u2ge     :initarg :u2ge     :reader codepage-u2ge     :initform (make-dict :test #'eql) :type dict))
 
-  ;; Map of Unicode code points to graphic escape EBCDIC bytes.
+  (:documentation "The Codepage Class."))
 
-  (u2ge (make-dict :test #'eql) :type dict :read-only t)
-
-  )
+(defun codepage-p (object)
+  (typep object 'codepage))
 
 
 ;;; Functions and methods.
@@ -137,7 +134,7 @@ See Also:
 
 *CODEPAGES*."
 
-  (let ((cp (apply #'%make-cp keys)))
+  (let ((cp (apply #'make-instance 'codepage keys)))
     (setf (gethash (codepage-id cp) *codepages*) cp)))
 
 

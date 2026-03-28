@@ -42,14 +42,15 @@
 
 ;;; response
 
-(defstruct response
-  "The Response Structure."
+(defclass response ()
+  ((aid  :initarg :aid  :accessor response-aid  :initform +aid-none+                  :type aid)
+   (row  :initarg :row  :accessor response-row  :initform 0                           :type row-index)
+   (col  :initarg :col  :accessor response-col  :initform 0                           :type col-index)
+   (vals :initarg :vals :accessor response-vals  :initform (make-dict :test #'equalp) :type dict))
+  (:documentation "The Response Class."))
 
-  (aid  +aid-none+ :type aid)
-  (row  0 :type row-index)
-  (col  0 :type col-index)
-  (vals (make-dict :test #'equalp) :type dict) ; STRING -> STRING.
-  )
+(defun response-p (object)
+  (typep object 'response))
 
 
 (defun field-modified-p (response field-name)
@@ -132,7 +133,7 @@ A synonym for HASH-TABLE."
            (type (or null device-info) dev)
            (type (or null codepage) cp))
 
-  (let ((r (make-response))
+  (let ((r (make-instance 'response))
         (cols 80)
         )
     (declare (type response r)

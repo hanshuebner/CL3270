@@ -33,56 +33,59 @@
 (defparameter *main-menu-screen*
   (make-screen
    "E4 Main Menu Screen"
-   (make-field :row 0 :col 31 :intense t :content "Main Menu")
+   (make-instance 'field :row 0 :col 31 :intense t :content "Main Menu")
 
    ;; Option
-   (make-field :row 1 :col 0 :content "Option ===>" :color +green+)
-   (make-field :row 1 :col 12 :name +main-menu-option+ :write t
+   (make-instance 'field :row 1 :col 0 :content "Option ===>" :color +green+)
+   (make-instance 'field :row 1 :col 12 :name +main-menu-option+ :write t
                :highlighting +underscore+ :color +turquoise+)
-   (make-field :row 1 :col 79 :Autoskip t) ; field "stop" character
+   (make-instance 'field :row 1 :col 79 :Autoskip t) ; field "stop" character
 
    ;; Info
-   (make-field :row 3 :col 57 :content "User ID . :" :color +green+)
-   (make-field :row 3 :col 69 :name +main-menu-Username+ :color +turquoise+)
-   (make-field :row 4 :col 57 :content "Time. . . :" :color +green+)
-   (make-field :row 4 :col 69 :name +main-menu-Time+ :color +turquoise+)
-   (make-field :row 5 :col 57 :content "Users . . :" :color +green+)
-   (make-field :row 5 :col 69 :name +main-menu-Users+ :color +turquoise+)
+   (make-instance 'field :row 3 :col 57 :content "User ID . :" :color +green+)
+   (make-instance 'field :row 3 :col 69 :name +main-menu-Username+ :color +turquoise+)
+   (make-instance 'field :row 4 :col 57 :content "Time. . . :" :color +green+)
+   (make-instance 'field :row 4 :col 69 :name +main-menu-Time+ :color +turquoise+)
+   (make-instance 'field :row 5 :col 57 :content "Users . . :" :color +green+)
+   (make-instance 'field :row 5 :col 69 :name +main-menu-Users+ :color +turquoise+)
 
    ;; Options
-   (make-field :row 3 :col 0 :content "1" :color +white+)
-   (make-field :row 3 :col 3 :content "Feature 1"
+   (make-instance 'field :row 3 :col 0 :content "1" :color +white+)
+   (make-instance 'field :row 3 :col 3 :content "Feature 1"
                :color +turquoise+ :intense t)
-   (make-field :row 3 :col 17 :content "A very cool feature" :color +green+)
+   (make-instance 'field :row 3 :col 17 :content "A very cool feature" :color +green+)
 
-   (make-field :row 4 :col 0 :content "2" :color +white+)
-   (make-field :row 4 :col 3 :content "Feature 2"
+   (make-instance 'field :row 4 :col 0 :content "2" :color +white+)
+   (make-instance 'field :row 4 :col 3 :content "Feature 2"
                :color +turquoise+ :intense t)
-   (make-field :row 4 :col 17 :content "Another neat feature" :color +green+)
+   (make-instance 'field :row 4 :col 17 :content "Another neat feature" :color +green+)
 
-   (make-field :row 5 :col 0 :content "3" :color +white+)
-   (make-field :row 5 :col 3 :content "Feature 3"
+   (make-instance 'field :row 5 :col 0 :content "3" :color +white+)
+   (make-instance 'field :row 5 :col 3 :content "Feature 3"
                :color +turquoise+ :intense t)
-   (make-field :row 5 :col 17 :content "This one's a boring feature"
+   (make-instance 'field :row 5 :col 17 :content "This one's a boring feature"
                :color +green+)
 
-   (make-field :row 7 :col 5 :content "Enter" :color +green+)
-   (make-field :row 7 :col 11 :content "X" :color +turquoise+ :intense t)
-   (make-field :row 7 :col 13 :content "to log off and exit." :color +green+)
+   (make-instance 'field :row 7 :col 5 :content "Enter" :color +green+)
+   (make-instance 'field :row 7 :col 11 :content "X" :color +turquoise+ :intense t)
+   (make-instance 'field :row 7 :col 13 :content "to log off and exit." :color +green+)
 
    ;; Error message
-   (make-field :row 21 :col 0 :name +main-menu-errormsg+ :color +red+ :intense t)
+   (make-instance 'field :row 21 :col 0 :name +main-menu-errormsg+ :color +red+ :intense t)
 
    ;; Key legend
-   (make-field :row 23 :col 1 :content "F1=Help")
-   (make-field :row 23 :col 14 :content "F3=Exit")
-   (make-field :row 23 :col 27 :content "F5=Refresh")
+   (make-instance 'field :row 23 :col 1 :content "F1=Help")
+   (make-instance 'field :row 23 :col 14 :content "F3=Exit")
+   (make-instance 'field :row 23 :col 27 :content "F5=Refresh")
    ))
 
 
-(defstruct main-menu-data
-  (option "")
-  (errormsg ""))
+(defclass main-menu-data ()
+  ((option   :initarg :option   :accessor main-menu-data-option   :initform "")
+   (errormsg :initarg :errormsg :accessor main-menu-data-errormsg :initform "")))
+
+(defun main-menu-data-p (object)
+  (typep object 'main-menu-data))
 
 
 ;;; main-menu
@@ -179,7 +182,7 @@
              (return-from main-menu
                (values session
                        #'main-menu
-                       (make-main-menu-data
+                       (make-instance 'main-menu-data
                         :option mm-option
                         :errormsg "Unknown option")
                        nil)))
@@ -191,32 +194,32 @@
 (defparameter *example-screen*
   (make-screen
    "E4 Example Screen"
-   (make-field :row 0 :col 30 :intense t :Content "Application Feature")
+   (make-instance 'field :row 0 :col 30 :intense t :Content "Application Feature")
 
    ;; Info -- replicate the data shown on the main menu
-   (make-field :row 3 :col 57 :Content "User ID . :" :color +green+)
-   (make-field :row 3 :col 69 :Name +main-menu-username+ :color +turquoise+)
+   (make-instance 'field :row 3 :col 57 :Content "User ID . :" :color +green+)
+   (make-instance 'field :row 3 :col 69 :Name +main-menu-username+ :color +turquoise+)
 
-   (make-field :row 4 :col 57 :Content "Time. . . :" :color +green+)
-   (make-field :row 4 :col 69 :Name +main-menu-time+ :color +turquoise+)
+   (make-instance 'field :row 4 :col 57 :Content "Time. . . :" :color +green+)
+   (make-instance 'field :row 4 :col 69 :Name +main-menu-time+ :color +turquoise+)
 
-   (make-field :row 5 :col 57 :Content "Users . . :" :color +green+)
-   (make-field :row 5 :col 69 :Name +main-menu-users+ :color +turquoise+)
+   (make-instance 'field :row 5 :col 57 :Content "Users . . :" :color +green+)
+   (make-instance 'field :row 5 :col 69 :Name +main-menu-users+ :color +turquoise+)
 
    ;; Feature-specific message
-   (make-field :row 12 :col 0 :Name +feature-message+)
+   (make-instance 'field :row 12 :col 0 :Name +feature-message+)
 
-   (make-field :row 14 :col 0 :Content "Press")
-   (make-field :row 14 :col 6 :Content "PF3" :intense t :color +white+)
-   (make-field :row 14 :col 10 :Content "to return to the main menu.")
+   (make-instance 'field :row 14 :col 0 :Content "Press")
+   (make-instance 'field :row 14 :col 6 :Content "PF3" :intense t :color +white+)
+   (make-instance 'field :row 14 :col 10 :Content "to return to the main menu.")
 
    ;; Error message
-   (make-field :row 21 :col 0 :Name +main-menu-errormsg+ :color +red+ :intense t)
+   (make-instance 'field :row 21 :col 0 :Name +main-menu-errormsg+ :color +red+ :intense t)
 
    ;; Key legend
-   (make-field :row 23 :col 1 :Content "F1=Help")
-   (make-field :row 23 :col 14 :Content "F3=Exit")
-   (make-field :row 23 :col 27 :Content "F5=Refresh")
+   (make-instance 'field :row 23 :col 1 :Content "F1=Help")
+   (make-instance 'field :row 23 :col 14 :Content "F3=Exit")
+   (make-instance 'field :row 23 :col 27 :Content "F5=Refresh")
    ))
 
 
