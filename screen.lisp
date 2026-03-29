@@ -96,6 +96,7 @@
    (no-clear           :initarg :no-clear           :accessor screen-opts-no-clear           :initform nil                 :type boolean)
    (cursor-row         :initarg :cursor-row         :accessor screen-opts-cursor-row         :initform 0                   :type row-index)
    (cursor-col         :initarg :cursor-col         :accessor screen-opts-cursor-col         :initform 0                   :type col-index)
+   (alarm              :initarg :alarm              :accessor screen-opts-alarm              :initform nil                 :type boolean)
    (post-send-callback :initarg :post-send-callback :accessor screen-opts-post-send-callback :initform nil                 :type (or null function))
    (callback-data      :initarg :callback-data      :accessor screen-opts-callback-data      :initform nil))
   (:documentation "The Screen-opts Class.
@@ -173,7 +174,8 @@ to the 3270 client."))
                             (not (screen-opts-no-clear opts))
                             (screen-opts-altscreen opts)
                             (screen-opts-codepage opts)
-                            :set-cursor (not (screen-opts-no-response opts))))
+                            :set-cursor (not (screen-opts-no-response opts))
+                            :alarm (screen-opts-alarm opts)))
   (when err
     (dbgmsg "SCO: error from SHOW-SCREE-INTERNAL~%")
     (return-from show-screen-opts (values resp err)))
@@ -253,7 +255,7 @@ encountered.
 
 
 (defun show-screen-internal (screen vals crow ccol conn clear dev cp
-                             &key (set-cursor t))
+                             &key (set-cursor t) alarm)
   (declare (type screen screen)
            (type (or null dict) vals)
            (type row-index crow)
@@ -289,14 +291,10 @@ encountered.
         (write-buffer b #xF1)) ; Write to terminal.
 
 
-    (if clear
-        (write-buffer b #xC3)  ; WCC = Reset, Unlock Keyboard, Reset MDT.
-
-        ;; Don't clear modified data tag if we're not clearing the
-        ;; screen; we still want the client to send any data a user
-        ;; has modified in fields.
-
-        (write-buffer b #xC2)) ; WCC = Reset, Unlock Keyboard (*no* reset MDT).
+    (let ((wcc (if clear #xC3 #xC2)))  ; Reset, Unlock Keyboard, +/- Reset MDT.
+      (when alarm
+        (setf wcc (logior wcc #x04)))  ; Sound alarm bit.
+      (write-buffer b wcc))
 
     ;; Now build the commands for each field on the screen.
 
