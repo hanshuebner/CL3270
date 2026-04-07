@@ -17,11 +17,15 @@
                :initform t :type boolean))
   (:documentation "Configuration for TLS connections."))
 
-(defun wrap-socket-with-tls (socket tls-config)
+(defun wrap-socket-with-tls (socket tls-config &key starttls)
   "Upgrade SOCKET's stream to TLS using CL+SSL.
 Returns the socket with its stream replaced by an SSL stream.
 Uses an SSL context with certificate-chain-file so the full chain
-(including intermediates) is sent to clients."
+(including intermediates) is sent to clients.
+When STARTTLS is true, keeps reading through the Lisp stream
+(unwrap-stream-p nil) so that any bytes already buffered by the
+stream (e.g. a TLS ClientHello that arrived with the final telnet
+STARTTLS subnegotiation) are not lost."
   (declare (type usocket:stream-usocket socket)
            (type tls-config tls-config))
   (let* ((raw-stream (usocket:socket-stream socket))
@@ -33,7 +37,8 @@ Uses an SSL context with certificate-chain-file so the full chain
                        (cl+ssl:make-ssl-server-stream
                         raw-stream
                         :certificate (tls-config-certificate-file tls-config)
-                        :key (tls-config-key-file tls-config)))))
+                        :key (tls-config-key-file tls-config)
+                        :unwrap-stream-p (not starttls)))))
     (setf (usocket:socket-stream socket) ssl-stream)
     socket))
 
@@ -67,8 +72,11 @@ Returns T if TLS was established, NIL otherwise."
                    (= (aref sb-buf 4) +iac+)
                    (= (aref sb-buf 5) +se+))
         (return-from negotiate-starttls nil)))
-    ;; Perform TLS handshake
-    (wrap-socket-with-tls c tls-config)
+    ;; Perform TLS handshake.  Use :starttls t so that any bytes
+    ;; already buffered in the Lisp stream (ClientHello that arrived
+    ;; alongside the SB TLS FOLLOWS) are read through the stream
+    ;; rather than directly from the fd.
+    (wrap-socket-with-tls c tls-config :starttls t)
     t))
 
 ;;;; end of file -- tls.lisp
