@@ -281,9 +281,6 @@ encountered.
         (fm (make-fieldmap))
         )
 
-    (when dev
-      (setf (values rows cols) (alt-dimensions dev)))
-
     ;; (dbgmsg "SCI: rows ~S cols S~%" rows cols)
 
     (if clear
