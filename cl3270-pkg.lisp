@@ -148,6 +148,8 @@ code.")
    "TERM-TYPE"
    "TLS-P"
    "DEVICE-NAME"
+   "COLOR-P"
+   "HIGHLIGHT-P"
    )
 
   ;; TLS

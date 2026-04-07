@@ -19,7 +19,9 @@
    (term-type :initarg :term-type :accessor term-type :initform "IBM 3270" :type string)
    (codepage  :initarg :codepage  :accessor codepage  :initform nil       :type (or null codepage))
    (tls-p     :initarg :tls-p     :accessor tls-p     :initform nil       :type boolean)
-   (device-name :initarg :device-name :accessor device-name :initform nil :type (or null string)))
+   (device-name :initarg :device-name :accessor device-name :initform nil :type (or null string))
+   (color-p     :initarg :color-p     :accessor color-p     :initform t   :type boolean)
+   (highlight-p :initarg :highlight-p :accessor highlight-p :initform t   :type boolean))
   (:documentation "The Device Info Class.
 
 Minimal information about the device, i.e., the 3270 terminal."))

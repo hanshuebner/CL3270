@@ -275,6 +275,8 @@ encountered.
   
   (let ((rows 24)
         (cols 80)
+        (dev-color-p (or (null dev) (color-p dev)))
+        (dev-highlight-p (or (null dev) (highlight-p dev)))
         (b (make-buffer))
         (fm (make-fieldmap))
         )
@@ -308,7 +310,9 @@ encountered.
           
           (write-buffer* b (sba frow fcol cols))
           (unless (field-position-only fld)
-            (write-buffer* b (build-field fld))) ; Double check this!
+            (write-buffer* b (build-field fld
+                                          :color-p dev-color-p
+                                          :highlight-p dev-highlight-p)))
           
           (let ((content (field-content fld)))
             (when (and vals (field-name fld) (string/= (field-name fld) ""))
@@ -384,11 +388,13 @@ encountered.
     result))
 
 
-(defun build-field (f &aux
-                      (buf (make-buffer))
-                      (paramcount 1))
-  (when (and (= (field-color f) +default-color+)
-             (= (field-highlighting f) +default-highlight+))
+(defun build-field (f &key (color-p t) (highlight-p t)
+                     &aux
+                     (buf (make-buffer))
+                     (paramcount 1)
+                     (use-color (and color-p (/= (field-color f) +default-color+)))
+                     (use-highlight (and highlight-p (/= (field-highlighting f) +default-highlight+))))
+  (unless (or use-color use-highlight)
 
     ;; This is a traditional field, issue a normal sf command.
     (write-buffer buf #x1D) ; SF - "start field"
@@ -407,10 +413,10 @@ encountered.
   ;; (dbgmsg "BUILD-FIELD: extended attribute field~%")
   (write-buffer buf #x29)
 
-  (when (/= (field-color f) +default-color+)
+  (when use-color
     (incf paramcount))
 
-  (when (/= (field-highlighting f) +default-highlight+)
+  (when use-highlight
     (incf paramcount))
 
   (write-buffer buf paramcount)
@@ -428,13 +434,13 @@ encountered.
 
   ;; Write the highlighting attribute.
 
-  (when (/= (field-highlighting f) +default-highlight+)
+  (when use-highlight
     (write-buffer buf #x41)
     (write-buffer buf (field-highlighting f)))
 
   ;; Write the color attribute.
 
-  (when (/= (field-color f) +default-color+)
+  (when use-color
     (write-buffer buf #x42)
     (write-buffer buf (field-color f)))
 

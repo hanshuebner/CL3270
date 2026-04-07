@@ -670,6 +670,8 @@ SENT-BIN : a BOOLEAN
           (cols 80)
           (cpid 3270) ; I know this is the "bracket" codpage.
           (is-x3270 nil)
+          (color-supported t)
+          (highlight-supported t)
           (aid (make-array 1
                            :element-type '(unsigned-byte 8)
                            :initial-element 0))
@@ -681,7 +683,7 @@ SENT-BIN : a BOOLEAN
       (declare (type (integer 12 132) rows cols) ; Ok, quirky.
                (type codepage-id cpid)
                (type (mod 2048) n) ; Just for the heck of it; I know, I know.
-               (type boolean is-x3270 ok)
+               (type boolean is-x3270 color-supported highlight-supported ok)
                (type (vector octet 1) aid)
                ;; (type function cpfunc)
                (type (or null codepage) codepage)
@@ -756,14 +758,20 @@ SENT-BIN : a BOOLEAN
 
             do
               (dbgmsg "TRN: buf 2 ~S, type of buf ~S~%" buf (type-of buf))
-              (cond ((and (= (aref buf 0) #x81) (= (aref buf 1) #x81))
+              (cond ((and (= (aref buf 0) #x81) (= (aref buf 1) #x80))
+                      ;; Summary. Check which QCODEs the terminal supports
+                      ;; to determine color and highlight capability.
+                      (setf color-supported (and (find #x86 buf :start 2) t)
+                            highlight-supported (and (find #x87 buf :start 2) t)))
+
+                     ((and (= (aref buf 0) #x81) (= (aref buf 1) #x81))
                       ;; Usable area.
                       (setf (values rows cols) (get-usable-area buf)))
 
                      ((and (= (aref buf 0) #x81) (= (aref buf 1) #x85))
                       ;; Character sets (codepage)
                       (setf cpid (get-codepage-id buf)))
-                     
+
                      ((and (= (aref buf 0) #x81) (= (aref buf 1) #xA1))
                       ;; RPQ Names. We use this to determine if the client
                       ;; is x3270 family.
@@ -794,7 +802,9 @@ SENT-BIN : a BOOLEAN
                                    :cols cols
                                    :term-type term-type
                                    :codepage codepage
-                                   :device-name lu-name)
+                                   :device-name lu-name
+                                   :color-p color-supported
+                                   :highlight-p highlight-supported)
       ))))
 
 
@@ -820,8 +830,8 @@ length) bytes."
     (error 'telnet-error))
 
   ;; big-endian two byte values
-  (setq cols (+ (ash 8 (aref buf 4)) (aref buf 5))
-        rows (+ (ash 8 (aref buf 6)) (aref buf 7)))
+  (setq cols (+ (ash (aref buf 4) 8) (aref buf 5))
+        rows (+ (ash (aref buf 6) 8) (aref buf 7)))
 
   (when (or (zerop rows) (zerop cols))
     ;; Got a Usable Area response but the values are 0?
