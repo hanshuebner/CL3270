@@ -298,12 +298,12 @@ encountered.
     ;; Now build the commands for each field on the screen.
 
     (dolist (fld (screen-fields screen))
-      (let ((frow (mod (field-row fld) rows))
-            (fcol (mod (field-col fld) cols))
+      (let ((frow (field-row fld))
+            (fcol (field-col fld))
             )
 
-        (unless (or (>= frow rows)
-                    (>= fcol cols))
+        (unless (or (minusp frow) (>= frow rows)
+                    (minusp fcol) (>= fcol cols))
           
           (write-buffer* b (sba frow fcol cols))
           (unless (field-position-only fld)
