@@ -256,7 +256,7 @@ When TLS-CONFIG is provided, STARTTLS is offered before protocol negotiation."
         (setq devtype (get-terminal-type c))
 
       (telnet-error ()
-        (format *error-output* "CL3270: Error: telnet error.~%")
+        (dbgmsg "Error: telnet error.~%")
         (error 'no-3270-error)))
 
     ;; Request end of record mode
@@ -310,8 +310,7 @@ When TLS-CONFIG is provided, STARTTLS is offered before protocol negotiation."
                                                  +binary+)
                                          c)
                          (setq sent-will-bin t)))
-                  (format *error-output*
-                          "CL3270: SHORT READ SHORT READ SHORT READ~%")
+                  (dbgmsg "SHORT READ SHORT READ SHORT READ~%")
                   ))
        else do
 
@@ -527,7 +526,7 @@ SENT-BIN : a BOOLEAN
           (dbgmsg "CHECK-OPTION-RESPONSE: read ~D bytes from conn...~%" n)
           (dbgmsg "CHECK-OPTION-RESPONSE: (aref buf 0) = ~2,'0X (~:*~D)~%" (aref buf 0))
           (when (or (< n 3) (/= (aref buf 0) +iac+))
-            (format *error-output* "CL3270: error...~%")
+            (dbgmsg "CHECK-OPTION-RESPONSE: short read or missing IAC~%")
             (error 'telnet-error)))
 
         ;; If the client is requesting to negotiate a mode with us before
@@ -582,18 +581,15 @@ SENT-BIN : a BOOLEAN
     ;; Hanling errors.
 
     (option-rejected-error ()
-      (format *error-output*
-              "CL3270: Error: option rejected.~%")
+      (dbgmsg "Error: option rejected.~%")
       (error 'no-3270-error))
 
     (telnet-error ()
-      (format *error-output*
-              "CL3270: Error: telnet error.~%")
+      (dbgmsg "Error: telnet error.~%")
       (error 'no-3270-error))
 
     (error (e)
-      (format *error-output*
-              "CL3270: got error ~S while checking response.~%" e)
+      (dbgmsg "got error ~S while checking response.~%" e)
       (error e))))
 
 
